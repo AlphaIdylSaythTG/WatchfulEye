@@ -3,23 +3,14 @@ import folium
 import sqlite3
 from geopy.geocoders import Nominatim
 from streamlit_folium import folium_static
+from PIL import Image
 
-# Add custom CSS styles
-st.markdown(
-    """
-    <style>
-    .centered-title {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 10vh;
-        font-size: 48px;
-        font-weight: bold;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+
+
+# Load and display the logo image
+logo_image = Image.open("Logo.png")
+st.image(logo_image, use_column_width=True)
+
 
 # Create a SQLite database connection
 conn = sqlite3.connect("markers.db")
@@ -39,9 +30,6 @@ marker_locations = c.fetchall()
 for marker in marker_locations:
     latitude, longitude, popup, color = marker
     folium.Marker(location=[latitude, longitude], popup=popup, icon=folium.Icon(color=color)).add_to(m)
-
-# Display the centered title
-st.markdown('<div class="centered-title">WatchfulEye</div>', unsafe_allow_html=True)
 
 # Display the map using folium_static with custom width and height
 folium_static(m, width=800, height=600)
