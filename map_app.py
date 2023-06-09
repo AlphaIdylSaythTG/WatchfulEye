@@ -6,6 +6,7 @@ from streamlit_folium import folium_static
 from PIL import Image
 
 
+# Set page title and favicon
 
 logo_image = Image.open("Logo.png")
 st.image(logo_image, use_column_width=True)
