@@ -7,7 +7,6 @@ from PIL import Image
 
 
 
-# Load and display the logo image
 logo_image = Image.open("Logo.png")
 st.image(logo_image, use_column_width=True)
 
