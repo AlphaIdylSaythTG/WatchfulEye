@@ -11,7 +11,6 @@ from streamlit_chat import message
 import openai
 
 
-
 def generate_bot_response(prompt):
     # API endpoint
     api_url = "https://api.openai.com/v1/chat/completions"
@@ -26,17 +25,15 @@ def generate_bot_response(prompt):
 
     # Generate a response
     completions = openai.Completion.create(
-        engine = "text-davinci-003",
-        prompt = prompt,
-        max_tokens = 1024,
-        n = 1,
-        stop = None,
+        engine="text-davinci-003",
+        prompt=prompt,
+        max_tokens=1024,
+        n=1,
+        stop=None,
         temperature=0.5,
     )
     message = completions.choices[0].text
     return message 
-
-    
 
 
 logo_image = Image.open("Logo.png")
@@ -44,9 +41,8 @@ st.image(logo_image, use_column_width=True)
 
 selected = option_menu(
     menu_title=None,
-    options=["Crime Mapper", "Safety Corner"],
-    # possibly even add a crime prediction option
-    icons=["map", "search"],
+    options=["Crime Mapper", "Safety Corner", "Safety Resources"],
+    icons=["map", "search", "info"],
     menu_icon="cast",
     default_index=0,
     orientation="horizontal",
@@ -145,22 +141,6 @@ if selected == "Crime Mapper":
         # Display the updated map with the new marker
         folium_static(m, width=800, height=600)
 
-    # Page for users to search location and get latitude and longitude
-    st.markdown('<p class="title">Search Location</p>', unsafe_allow_html=True)
-    st.markdown("---")  # Add a horizontal line for separation
-
-    location_input = st.text_input("Enter a location or ZIP code")
-    location_button = st.button("Get Latitude and Longitude", key="location_button")
-
-    if location_button:
-        geolocator = Nominatim(user_agent="my-app")
-        location = geolocator.geocode(location_input)
-        if location:
-            st.write("Latitude:", location.latitude)
-            st.write("Longitude:", location.longitude)
-        else:
-            st.write("Location not found")
-
     # Close the database connection
     conn.close()
 
@@ -184,9 +164,27 @@ if selected == "Safety Corner":
 
         # Display bot's response
         message(bot_response, is_user=False)
-    
-    
 
-    
+if selected == "Safety Resources":
+    # Page title and description
+    st.title("Safety Resources")
+    st.write("Here are some relevant safety resources to help you stay informed and prepared.")
 
-    
+    # Resource 1
+    st.header("Resource 1")
+    st.write("Website: [National Safety Council](https://www.nsc.org/)")
+    st.write("Description: The National Safety Council is a nonprofit organization that provides valuable safety information, resources, and training to promote safety at home, work, and in the community.")
+
+    # Resource 2
+    st.header("Resource 2")
+    st.write("Website: [Ready.gov](https://www.ready.gov/)")
+    st.write("Description: Ready.gov is a website by the Federal Emergency Management Agency (FEMA) that offers guidance on emergency preparedness and provides resources to help individuals and communities plan for various types of disasters.")
+
+    # Resource 3
+    st.header("Resource 3")
+    st.write("Website: [CDC - Emergency Preparedness and Response](https://www.cdc.gov/phpr/index.htm)")
+    st.write("Description: The Centers for Disease Control and Prevention (CDC) - Emergency Preparedness and Response website provides information and resources for public health emergencies and disasters, including guidance on emergency preparedness, response, and recovery.")
+
+    # Add more resources as needed
+
+
