@@ -185,6 +185,15 @@ if selected == "Safety Resources":
     st.write("Website: [CDC - Emergency Preparedness and Response](https://www.cdc.gov/phpr/index.htm)")
     st.write("Description: The Centers for Disease Control and Prevention (CDC) - Emergency Preparedness and Response website provides information and resources for public health emergencies and disasters, including guidance on emergency preparedness, response, and recovery.")
 
-    # Add more resources as needed
+# Add footer section
+st.markdown(
+    """
+    <footer style="text-align: center; margin-top: 20px;">
+        <p>Created by Yash Thapliyal and Laxya Kumar</p>
+        <p><a href="https://github.com/AlphaIdylSaythTG">Yash's Github</a> | <a href="https://github.com/Lkumar209">Laxya's Github</a></p>
+    </footer>
+    """,
+    unsafe_allow_html=True
+)
 
 
