@@ -8,6 +8,8 @@ from streamlit_option_menu import option_menu
 from annotated_text import annotated_text
 import pandas as pd
 import pydeck as pdk
+from streamlit_chat import message
+
 
 
 
@@ -18,7 +20,7 @@ st.image(logo_image, use_column_width=True)
 
 selected = option_menu(
     menu_title=None,
-    options=["Crime Mapper", "Crime Analysis"],
+    options=["Crime Mapper", "Safety Corner"],
     # possibly even add a crime prediction option
     icons=["map", "search"],
     menu_icon="cast",
@@ -138,34 +140,34 @@ if selected == "Crime Mapper":
     # Close the database connection
     conn.close()
 
-if selected == "Crime Analysis":
-    st.title("Crime Analysis")
+if selected == "Safety Corner":
+     # Page title and description
+    st.title("Safety Corner")
+    st.write("Welcome to the Safety Corner! Here, you can get safety tips, resources, and educational materials to help you stay safe.")
 
-    st.pydeck_chart(pdk.Deck(
-        map_style=None,
-        initial_view_state=pdk.ViewState(
-            latitude=40.7128,  # Set the initial latitude (e.g., New York City)
-            longitude=-74.0060,  # Set the initial longitude (e.g., New York City)
-            zoom=12,  # Set the initial zoom level
-            pitch=0,  # Set the initial pitch angle
-        ),
-        layers=[
-            pdk.Layer(
-                'HexagonLayer',
-                data=crime_data,
-                get_position='[longitude, latitude]',
-                radius=100,  # Set the radius of each hexagon
-                elevation_scale=100,
-                elevation_range=[0, 1000],
-                pickable=True,
-                extruded=True,
-            ),
-        ],
-    ))
- 
+    # Chatbot section
+    st.header("Chat with our Safety Bot")
+    
+    # Example chatbot messages
+    message("Hello! How can I assist you today?")
+    message("I'm here to provide safety tips and answer any questions you have.")
 
+    # User input
+    user_input = st.text_input("Enter your message")
+    if user_input:
+        # Process user input and generate bot's response
+        bot_response = generate_bot_response(user_input)  # Replace with your own logic
 
+        # Display bot's response
+        message(bot_response, is_user=False)
 
+    # Add more safety tips and resources below
 
+    # End of Safety Corner page
 
+    
+    
 
+    
+
+    
