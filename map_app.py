@@ -34,19 +34,46 @@ for marker in marker_locations:
 # Display the map using folium_static with custom width and height
 folium_static(m, width=800, height=600)
 
+# Center the titles using CSS
+st.markdown(
+    """
+    <style>
+    .title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        text-decoration: underline;
+    }
+    .form-container {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # Page for users to submit suspicious activity
-st.subheader("Report Suspicious Activity")
+st.markdown('<p class="title">Report Suspicious Activity</p>', unsafe_allow_html=True)
+st.markdown("---")  # Add a horizontal line for separation
 
-with st.form("suspicious_activity_form"):
-    col1, col2 = st.columns(2)
-    with col1:
-        latitude = st.number_input("Latitude")
-    with col2:
-        longitude = st.number_input("Longitude")
+col1, col2 = st.columns(2)
+with col1:
+    with st.container():
+        latitude = st.number_input("Latitude", value=0.0)
+with col2:
+    with st.container():
+        longitude = st.number_input("Longitude", value=0.0)
 
-    description = st.text_area("Description")
+with st.container():
+    with st.container():
+        description = st.text_area("Description")
 
-    submitted = st.form_submit_button("Submit")
+submitted = st.button("Submit")
 
 if submitted:
     # Insert the submitted suspicious activity into the database
@@ -60,9 +87,12 @@ if submitted:
     folium_static(m, width=800, height=600)
 
 # Page for users to search location and get latitude and longitude
-st.subheader("Search Location")
+st.markdown('<p class="title">Search Location</p>', unsafe_allow_html=True)
+st.markdown("---")  # Add a horizontal line for separation
 
-location_input = st.text_input("Enter a location or ZIP code")
+with st.container():
+    location_input = st.text_input("Enter a location or ZIP code")
+
 location_button = st.button("Get Latitude and Longitude")
 
 if location_button:
