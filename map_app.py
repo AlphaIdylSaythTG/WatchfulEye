@@ -25,18 +25,18 @@ def generate_bot_response(prompt):
     max_tokens = 1024
 
     # Generate a response
-    completion = openai.Completion.create(
-        engine=model_engine,
-        prompt=prompt,
-        max_tokens=max_tokens,
+    completions = openai.Completion.create(
+        engine = "text-davinci-003",
+        prompt = prompt,
+        max_tokens = 1024,
+        n = 1,
+        stop = None,
         temperature=0.5,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
     )
+    message = completions.choices[0].text
+    return message 
 
-
-    return completion.choices[0].text
+    
 
 
 logo_image = Image.open("Logo.png")
