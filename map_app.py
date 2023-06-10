@@ -10,14 +10,12 @@ import pydeck as pdk
 from streamlit_chat import message
 import openai
 
-
 def generate_bot_response(prompt):
     # API endpoint
     api_url = "https://api.openai.com/v1/chat/completions"
 
     with open("api_key.txt", "r") as file:
         openai.api_key = file.read().strip()
-    
     
     model_engine = "text-curie-001"
     # Set the maximum number of tokens to generate in the response
@@ -41,8 +39,8 @@ st.image(logo_image, use_column_width=True)
 
 selected = option_menu(
     menu_title=None,
-    options=["Crime Mapper", "Safety Corner", "Safety Resources"],
-    icons=["map", "search", "info"],
+    options=["Crime Mapper", "Safety Corner", "Safety Resources", "Location Info"],
+    icons=["map", "search", "info", "location"],
     menu_icon="cast",
     default_index=0,
     orientation="horizontal",
@@ -131,20 +129,33 @@ if selected == "Crime Mapper":
         )
         conn.commit()
 
-        # Add a marker for the submitted suspicious activity
-        folium.Marker(
-            location=[latitude, longitude],
-            popup=description,
-            icon=folium.Icon(color="yellow"),
-        ).add_to(m)
+        # Clear the existing map
+        st.empty()
 
-        # Display the updated map with the new marker
-        folium_static(m, width=800, height=600)
+
+        # Retrieve markers data from the database
+        c.execute("SELECT * FROM markers")
+        marker_locations = c.fetchall()
+
+        for marker in marker_locations:
+            latitude, longitude, popup, color = marker
+            folium.Marker(
+                location=[latitude, longitude],
+                popup=popup,
+                icon=folium.Icon(color=color),
+            ).add_to(m)
+
+
+
+        # Reset the input values
+        latitude = 0.0
+        longitude = 0.0
+        description = ""
 
     # Close the database connection
     conn.close()
 
-if selected == "Safety Corner":
+elif selected == "Safety Corner":
     # Page title and description
     st.title("Safety Corner")
     st.write("Welcome to the Safety Corner! Here, you can get safety tips, resources, and educational materials to help you stay safe.")
@@ -165,7 +176,7 @@ if selected == "Safety Corner":
         # Display bot's response
         message(bot_response, is_user=False)
 
-if selected == "Safety Resources":
+elif selected == "Safety Resources":
     # Page title and description
     st.title("Safety Resources")
     st.write("Here are some relevant safety resources to help you stay informed and prepared.")
@@ -185,15 +196,23 @@ if selected == "Safety Resources":
     st.write("Website: [CDC - Emergency Preparedness and Response](https://www.cdc.gov/phpr/index.htm)")
     st.write("Description: The Centers for Disease Control and Prevention (CDC) - Emergency Preparedness and Response website provides information and resources for public health emergencies and disasters, including guidance on emergency preparedness, response, and recovery.")
 
-# Add footer section
-st.markdown(
-    """
-    <footer style="text-align: center; margin-top: 20px;">
-        <p>Created by Yash Thapliyal and Laxya Kumar</p>
-        <p><a href="https://github.com/AlphaIdylSaythTG">Yash's Github</a> | <a href="https://github.com/Lkumar209">Laxya's Github</a></p>
-    </footer>
-    """,
-    unsafe_allow_html=True
-)
+elif selected == "Location Info":
+    # Page title and description
+    st.title("Location Information")
+    st.write("Enter a location to get more information about it.")
 
-
+    location = st.text_input("Enter a location")
+    if location:
+        geolocator = Nominatim(user_agent="location-info")
+        try:
+            location = geolocator.geocode(location)
+            if location:
+                st.write("Latitude:", location.latitude)
+                st.write("Longitude:", location.longitude)
+                st.write("Address:", location.address)
+                st.write("Country:", location.raw["display_name"].split(",")[-1].strip())
+            else:
+                st.warning("Location not found. Please enter a valid location.")
+        except Exception as e:
+            st.error("An error occurred while fetching the location information.")
+            st.error(str(e))
