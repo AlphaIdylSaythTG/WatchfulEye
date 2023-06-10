@@ -40,7 +40,7 @@ if selected == "Crime Mapper":
     )
 
     # Create a map centered at latitude 40.7128 and longitude -74.0060 (New York City)
-    m = folium.Map(location=[40.7128, -74.0060], zoom_start=12)
+    m = folium.Map(location=[40.7128, -94.0060], zoom_start=4)
 
     # Retrieve markers data from the database
     c.execute("SELECT * FROM markers")
@@ -55,7 +55,7 @@ if selected == "Crime Mapper":
         ).add_to(m)
 
     # Display the map using folium_static with custom width and height
-    folium_static(m, width=800, height=600)
+    folium_static(m, width=700, height=600)
 
     # Center the titles using CSS
     st.markdown(
