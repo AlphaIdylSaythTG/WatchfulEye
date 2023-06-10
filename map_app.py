@@ -5,8 +5,6 @@ from geopy.geocoders import Nominatim
 from streamlit_folium import folium_static
 from PIL import Image
 from streamlit_option_menu import option_menu
-import pandas as pd
-import pydeck as pdk
 from streamlit_chat import message
 import openai
 
