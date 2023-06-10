@@ -5,15 +5,39 @@ from geopy.geocoders import Nominatim
 from streamlit_folium import folium_static
 from PIL import Image
 from streamlit_option_menu import option_menu
-from annotated_text import annotated_text
 import pandas as pd
 import pydeck as pdk
 from streamlit_chat import message
+import openai
 
 
 
+def generate_bot_response(prompt):
+    # API endpoint
+    api_url = "https://api.openai.com/v1/chat/completions"
 
-# Set page title and favicon
+    with open("api_key.txt", "r") as file:
+        openai.api_key = file.read().strip()
+    
+    
+    model_engine = "text-curie-001"
+    # Set the maximum number of tokens to generate in the response
+    max_tokens = 1024
+
+    # Generate a response
+    completion = openai.Completion.create(
+        engine=model_engine,
+        prompt=prompt,
+        max_tokens=max_tokens,
+        temperature=0.5,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+
+    return completion.choices[0].text
+
 
 logo_image = Image.open("Logo.png")
 st.image(logo_image, use_column_width=True)
@@ -141,7 +165,7 @@ if selected == "Crime Mapper":
     conn.close()
 
 if selected == "Safety Corner":
-     # Page title and description
+    # Page title and description
     st.title("Safety Corner")
     st.write("Welcome to the Safety Corner! Here, you can get safety tips, resources, and educational materials to help you stay safe.")
 
@@ -156,15 +180,10 @@ if selected == "Safety Corner":
     user_input = st.text_input("Enter your message")
     if user_input:
         # Process user input and generate bot's response
-        bot_response = generate_bot_response(user_input)  # Replace with your own logic
+        bot_response = generate_bot_response(user_input)  
 
         # Display bot's response
         message(bot_response, is_user=False)
-
-    # Add more safety tips and resources below
-
-    # End of Safety Corner page
-
     
     
 
